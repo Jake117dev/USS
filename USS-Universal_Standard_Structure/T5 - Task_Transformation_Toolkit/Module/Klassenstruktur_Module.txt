@@ -1,0 +1,23 @@
+a) Vorbereitung (Initialize):
+Aufgabe: Alles bereitmachen, damit die Hauptaufgabe reibungslos abläuft.
+Überprüfen, ob Ressourcen verfügbar sind.
+Umgebungsvariablen, Konfigurationen oder Verbindungen initialisieren.
+Fehler frühzeitig erkennen (z. B. Datei fehlt, Datenbank nicht erreichbar).
+
+b) Verarbeitungsschritt 1: Input
+Aufgabe: Alles, was benötigt wird, sammeln oder generieren.
+Daten aus einer Quelle lesen (z. B. Registry, Dateien, API).
+Neue Inhalte erstellen (z. B. Datenstrukturen oder Platzhalter).
+Eingaben validieren (sind die richtigen Daten vorhanden?).
+
+c) Verarbeitungsschritt 2: Processing
+Aufgabe: Die Hauptlogik des Moduls ausführen.
+Rohdaten analysieren und umwandeln.
+Berechnungen, Transformationen oder Validierungen durchführen.
+Daten anreichern oder optimieren (z. B. fehlende Felder ergänzen).
+
+d) Verarbeitungsschritt 3: Output
+Aufgabe: Die Ergebnisse bereitstellen oder ausgeben.
+Verarbeitete Daten speichern (z. B. Datei schreiben, Datenbank aktualisieren).
+Ergebnisse zurückgeben (z. B. JSON, Liste, Dictionary).
+Optional: Ergebnisberichte erstellen oder in einem GUI anzeigen.
