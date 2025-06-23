@@ -21,65 +21,98 @@ Ziel ist ein selbstheilendes, bootfestes System mit intelligenter Automatisierun
 
 ## 🏗️ Architekturübersicht
 
-```text
+```
 [agent-pi] --(ntfy/systemd)--> [FastAPI/RAG] --> [Ollama (GPU-Tower)]
     |                             ▲
     |                             |
 [raid-pi] <--- RAID / Backup ----+
        \
         > Qdrant (Vector Search)
+```
 
+---
 
-⚙️ Technologien & Komponenten
-Raspberry Pi (Agent-Node & RAID-Node)
+## ⚙️ Technologien & Komponenten
 
-Qdrant für Vektorsuche
+- `Raspberry Pi` (Agent-Node & RAID-Node)
+- `Qdrant` für Vektorsuche
+- `FastAPI`, `uvicorn`, `Python 3`, `venv`
+- `rclone`, `smartmontools`, `ntfy`
+- `Ollama` (lokaler LLM-Server auf Windows per `nssm`)
+- `systemd`-Timer & Dienste
 
-FastAPI, uvicorn, Python 3, venv
+---
 
-rclone, smartmontools, ntfy
+## 🛠️ Setup & Installation
 
-Ollama (lokaler LLM-Server auf Windows per nssm)
+### 📦 Raspberry Pi (agent-pi & raid-pi)
 
-systemd-Timer & Dienste
+```bash
+sudo apt update && sudo apt install unattended-upgrades ntfy rclone smartmontools
+# 50unattended-upgrades anpassen, ntfy-Hook in /etc/apt/apt.conf.d/
+# raid_report.sh + backup_agent.sh nach /usr/local/bin/, cron/timer einrichten
+```
 
-🛠️ Setup & Installation
-Detaillierte Installationsschritte findest du im unteren Teil des Repos (README oder /docs/-Ordner).
+### 🧬 Qdrant (VectorDB)
 
-Für Schnellstarter:
-
-# Pi: Basis-Tools & Agent-Skripte
-sudo apt install unattended-upgrades ntfy rclone smartmontools
-
-# Qdrant starten (Docker)
+```bash
 cd /opt/qdrant
 docker compose up -d
+```
 
-# FastAPI-RAG-Service aktivieren
+### 🧠 FastAPI RAG-Endpoint
+
+```bash
 cd /opt/uss_api
-python3 -m venv venv && source venv/bin/activate
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 systemctl enable uss-api.service uss-ready.service
+systemctl start uss-api.service
+```
 
-# Windows: Ollama-Service (LLM)
+### 🪟 Windows (Ollama LLM-Server)
+
+```powershell
 winget install nomic.gpt4all
-nssm install Ollama "...\ollama.exe" serve
-🔍 Beispiel: RAG-Abfrage
+setx OLLAMA_HOST 0.0.0.0
+setx OLLAMA_MODELS "%USERPROFILE%\.ollama\models"
+nssm install Ollama "C:\Users\mrieh\AppData\Local\Programs\Ollama\ollama.exe" serve
+nssm set Ollama AppDirectory "C:\Users\mrieh\AppData\Local\Programs\Ollama"
+nssm start Ollama
+```
 
+---
+
+## 🔍 Nutzung
+
+### Beispiel-Query an den `/ask`-Endpoint:
+
+```bash
 curl -X POST http://<pi-ip>:8000/ask \
      -H "Content-Type: application/json" \
      -d '{"query":"Wie registriere ich ein Modul?","top_k":4}'
-📦 Antwort: JSON mit answer + sources direkt aus deinem Code-Repo.
+```
 
-📜 Lizenz
-Dieses Projekt steht unter CC BY-NC-SA 4.0.
-→ Siehe LICENSE für Details.
+➡️ Antwort: JSON mit `answer` + `sources` direkt aus deinem Code-Repo.
 
-🛣️ Roadmap (Next Steps)
- MMR + Cross-Encoder Re-Ranking
+---
 
- Deutsch-getuntes Modell (mistral-7b-de)
+## 📜 Lizenz
 
- Automatisches Cleanup alter Backups
+Dieses Projekt steht unter der [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).  
+Siehe [LICENSE](./LICENSE) für Details.
 
- GitHub-Monorepo mit klarer Trennung: api/, infra/, embeddings/, docs/
+---
+
+## 🛣️ Roadmap (Next Steps)
+
+- [ ] MMR + Cross-Encoder Re-Ranking  
+- [ ] Deutsch-getuntes Modell (`mistral-7b-de`)  
+- [ ] Automatisches Cleanup alter Backups  
+- [ ] GitHub-Monorepo mit klarer Struktur: `api/`, `infra/`, `embeddings/`, `docs/`
+
+---
+
+💬 **Fragen oder Ideen?** → Öffne ein Issue oder schick 'nen Pull Request.  
+🧭 Bleib neugierig – das USS fährt von selbst weiter 😉
