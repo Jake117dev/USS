@@ -1,0 +1,8 @@
+﻿# Python
+.venv/
+__pycache__/
+
+# temp & big
+*.json
+*.log
+*.gguf
