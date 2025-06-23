@@ -77,8 +77,8 @@ systemctl start uss-api.service
 winget install nomic.gpt4all
 setx OLLAMA_HOST 0.0.0.0
 setx OLLAMA_MODELS "%USERPROFILE%\.ollama\models"
-nssm install Ollama "C:\Users\mrieh\AppData\Local\Programs\Ollama\ollama.exe" serve
-nssm set Ollama AppDirectory "C:\Users\mrieh\AppData\Local\Programs\Ollama"
+nssm install Ollama "C:\Users\""\AppData\Local\Programs\Ollama\ollama.exe" serve
+nssm set Ollama AppDirectory "C:\Users\""\AppData\Local\Programs\Ollama"
 nssm start Ollama
 ```
 
